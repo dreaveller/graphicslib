@@ -1,1 +1,1 @@
-# matrix
+# matrix a simple matrix class
