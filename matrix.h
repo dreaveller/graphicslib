@@ -1,216 +1,219 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-namespace matrix
+namespace cx
 {
-class matrix
-{
-public:
-    typedef size_t size_matrix;
+    class matrix
+    {
+    public:
+        typedef size_t size_matrix;
 
-private:
-    int inner_row, inner_column;
-    double **p;
+    private:
+        int _row, _col;
+        float **p;
 
-private:
-    void allocmem(size_matrix _row, size_matrix _column)
-    {
-        p = new double *[_row];
-        for (int i = 0; i < _row; i++)
+    private:
+        void allocmem(size_matrix _row, size_matrix _col)
         {
-            p[i] = new double[_column];
-        }
-    }
-    void freemem()
-    {
-        for (int i = 0; i < inner_row; i++)
-        {
-            delete[] p[i];
-        }
-        delete[] p;
-    }
-
-public:
-    matrix(const size_matrix row, const size_matrix column)
-    {
-        inner_row = row;
-        inner_column = column;
-        allocmem(row, column);
-    }
-    matrix(const size_matrix row, const size_matrix column, double value)
-    {
-        inner_row = row;
-        inner_column = column;
-        allocmem(row, column);
-        for (int k = 0; k < row; k++)
-            for (int l = 0; l < column; l++)
-                p[k][l] = value;
-    }
-    matrix(const size_matrix row, const size_matrix column, double **matarr)
-    {
-        inner_row = row;
-        inner_column = column;
-        allocmem(row, column);
-        for (int k = 0; k < row; k++)
-            for (int l = 0; l < column; l++)
-                p[k][l] = matarr[k][l];
-    }
-    matrix(matrix &mat)
-    {
-    }
-    ~matrix()
-    {
-        freemem();
-    }
-
-public:
-    size_matrix row() const
-    {
-        return inner_row;
-    }
-    size_matrix column() const
-    {
-        return inner_column;
-    }
-    void resize(size_matrix row, size_matrix column)
-    {
-        freemem();
-        inner_row = row;
-        inner_column = column;
-        allocmem(row, column);
-    }
-
-public:
-    double *operator[](size_matrix row) { return p[row]; };
-    const double *operator[](size_matrix row) const { return p[row]; };
-    matrix &operator=(const matrix &rhs)
-    {
-        this->resize(rhs.row, rhs.column);
-        for (int i = 0; i < inner_row; i++)
-        {
-            memcpy(p[i], rhs[i], inner_column * sizeof(double));
-        }
-        return *this;
-    }
-    bool operator==(const matrix &rhs) //还需改动 ， 大小不一致情况
-    {
-        for (int i = 0; i < inner_row; i++)
-        {
-            if (!memcmp(p[i], rhs[i], inner_column * sizeof(rhs[0][0])))
-                return false;
-        }
-        return true;
-    }
-    matrix operator+(const matrix &rhs) const
-    {
-        try
-        {
-            if (this->row() != rhs.row() || (this->column() != rhs.column()))
+            p = new float *[_row];
+            for (int i = 0; i < _row; i++)
             {
-                throw - 1;
+                p[i] = new float[_col];
             }
-            matrix res(this->row(), this->column());
-            for (size_matrix i = 0; i < this->row(); ++i)
-                for (size_matrix j = 0; j < this->column(); ++j)
-                    res[i][j] = (*this)[i][j] + rhs[i][j];
-            return res;
         }
-        catch (int)
+        void freemem()
         {
-            printf("inconsistent matrix size\n");
-            exit(-1);
-        }
-    }
-    matrix operator*(const matrix &rhs) const
-    {
-        try
-        {
-            if (this->column() != rhs.column() || this->row() != rhs.column())
-                throw - 1;
-            matrix res(this->row(), this->column());
-            for (size_matrix i = 0; i < res.row(); ++i)
-                for (size_matrix j = 0; j < res.column(); ++j)
-                    res[i][j] = (*this)[i][j] * rhs[i][j];
-            return res;
-        }
-        catch (int)
-        {
-            printf("inconsistent matrix size\n");
-            exit(-1);
-        }
-    }
-    matrix operator-(const matrix &rhs) const
-    {
-        try
-        {
-            if (this->row() != rhs.row() || (this->column() != rhs.column()))
+            for (int i = 0; i < _row; i++)
             {
-                throw - 1;
+                delete[] p[i];
             }
-            matrix res(this->row(), this->column());
-            for (size_matrix i = 0; i < this->row(); ++i)
-                for (size_matrix j = 0; j < this->column(); ++j)
-                    res[i][j] = (*this)[i][j] - rhs[i][j];
-            return res;
+            delete[] p;
         }
-        catch (int)
-        {
-            printf("inconsistent matrix size\n");
-            exit(-1);
-        }
-    }
-    matrix &operator+=(const matrix &rhs) const
-    {
-        return (*this) + rhs;
-    }
-    matrix &operator*=(const matrix &rhs) const
-    {
-        return (*this) * rhs;
-    }
-    matrix &operator-=(const matrix &rhs) const
-    {
-        return (*this) - rhs;
-    }
 
-public:
-    void dot(const matrix &rhs)
-    {
-        try
+    public:
+        matrix(const size_matrix row, const size_matrix col);
+        matrix(const size_matrix row, const size_matrix col, float value);
+        matrix(const size_matrix row, const size_matrix col, float **matarr);
+        matrix(matrix &mat);
+        ~matrix();
+
+    public:
+        size_matrix row() const
         {
-            if (this->column != rhs.row())
-                throw - 1;
-            for (size_matrix row = 0; row < this->row(); ++row)
-                for (size_matrix column = 0; column < rhs.column(); ++column)
-                    for (size_matrix k = 0; k < this->column(); ++k)
-                        *this[row][column] += (*this)[row][k] * rhs[k][column];
-            return;
+            return _row;
         }
-        catch (int)
+        size_matrix col() const
         {
-            printf("a wrong size...\n");
-            exit(-1);
+            return _col;
         }
-    }
-    void cat(const matrix &rhs, int flag)
-    {
-        try
+        void resize(size_matrix row, size_matrix col)
         {
-            if (flag == 0)
+            freemem();
+            _row = row;
+            _col = col;
+            allocmem(row, col);
+        }
+
+    public:
+        float *operator[](size_matrix row) { return p[row]; };
+        const float *operator[](size_matrix row) const { return p[row]; };
+        matrix &operator=(const matrix &rhs)
+        {
+            this->resize(rhs.row(), rhs.col());
+            for (int i = 0; i < _row; i++)
             {
-                if (this->inner_row != rhs.inner_row)
-                    throw - 1;
-                else
+                memcpy(p[i], rhs[i], _col * sizeof(float));
+            }
+            return *this;
+        }
+        bool operator==(const matrix &rhs) //还需改动 ， 大小不一致情况
+        {
+            for (int i = 0; i < _row; i++)
+            {
+                if (!memcmp(p[i], rhs[i], _col * sizeof(rhs[0][0])))
+                    return false;
+            }
+            return true;
+        }
+        matrix operator+(const matrix &rhs) const
+        {
+            try
+            {
+                if (this->row() != rhs.row() || (this->col() != rhs.col()))
                 {
-                    inner_row = this->inner_row + rhs.inner_row;
-                    inner_column = this->inner_column + rhs.inner_column;
-                    //double
+                    throw -1;
+                }
+                matrix res(this->row(), this->col());
+                for (size_matrix i = 0; i < this->row(); ++i)
+                    for (size_matrix j = 0; j < this->col(); ++j)
+                        res[i][j] = (*this)[i][j] + rhs[i][j];
+                return res;
+            }
+            catch (int)
+            {
+                printf("inconsistent matrix size\n");
+            }
+        }
+        matrix operator*(const matrix &rhs) const
+        {
+            try
+            {
+                if (this->col() != rhs.col() || this->row() != rhs.col())
+                    throw -1;
+                matrix res(this->row(), this->col());
+                for (size_matrix i = 0; i < res.row(); ++i)
+                    for (size_matrix j = 0; j < res.col(); ++j)
+                        res[i][j] = (*this)[i][j] * rhs[i][j];
+                return res;
+            }
+            catch (int)
+            {
+                printf("inconsistent matrix size\n");
+                exit(-1);
+            }
+        }
+        matrix operator-(const matrix &rhs) const
+        {
+            try
+            {
+                if (this->row() != rhs.row() || (this->col() != rhs.col()))
+                {
+                    throw -1;
+                }
+                matrix res(this->row(), this->col());
+                for (size_matrix i = 0; i < this->row(); ++i)
+                    for (size_matrix j = 0; j < this->col(); ++j)
+                        res[i][j] = (*this)[i][j] - rhs[i][j];
+                return res;
+            }
+            catch (int)
+            {
+                printf("inconsistent matrix size\n");
+                exit(-1);
+            }
+        }
+        matrix &operator+=(const matrix &rhs) const
+        {
+            return (*this) + rhs;
+        }
+        matrix &operator*=(const matrix &rhs) const
+        {
+            return (*this) * rhs;
+        }
+        matrix &operator-=(const matrix &rhs) const
+        {
+            return (*this) - rhs;
+        }
+
+    public:
+        void dot(const matrix &rhs)
+        {
+            try
+            {
+                if (this->col() != rhs.row())
+                    throw -1;
+                for (size_matrix row = 0; row < this->row(); ++row)
+                    for (size_matrix col = 0; col < rhs.col(); ++col)
+                        for (size_matrix k = 0; k < this->col(); ++k)
+                            *this[row][col] += (*this)[row][k] * rhs[k][col];
+                return;
+            }
+            catch (int)
+            {
+                printf("a wrong size...\n");
+                exit(-1);
+            }
+        }
+        void cat(const matrix &rhs, int flag)
+        {
+            try
+            {
+                if (flag == 0)
+                {
+                    if (this->_row != rhs._row)
+                        throw -1;
+                    else
+                    {
+                        _row = this->_row + rhs._row;
+                        _col = this->_col + rhs._col;
+                        //float
+                    }
                 }
             }
+            catch (int)
+            {
+                exit(-1);
+            }
         }
-        catch (int)
-        {
-            exit(-1);
-        }
+    };
+
+    matrix::matrix(const size_matrix row, const size_matrix col)
+    {
+        matrix(row, col, 0.0);
     }
-};
-} // namespace matrix
+    matrix::matrix(const size_matrix row, const size_matrix col, float value)
+    {
+        _row = row;
+        _col = col;
+        allocmem(row, col);
+        for (int k = 0; k < row; k++)
+            for (int l = 0; l < col; l++)
+                p[k][l] = value;
+    }
+    matrix::matrix(const size_matrix row, const size_matrix col, float **matarr)
+    {
+        _row = row;
+        _col = col;
+        allocmem(row, col);
+        for (int k = 0; k < row; k++)
+            for (int l = 0; l < col; l++)
+                p[k][l] = matarr[k][l];
+    }
+    matrix::matrix(matrix &mat)
+    {
+    }
+    matrix::~matrix()
+    {
+        freemem();
+    }
+}
