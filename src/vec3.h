@@ -1,8 +1,15 @@
+/*
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: cc
+ * @Date: 2021-03-31 18:55:43
+ * @LastEditors: cc
+ * @LastEditTime: 2021-04-05 03:00:11
+ */
 namespace cx
 {
     class vec3
     {
-    private:
     public:
         float x, y, w;
         vec3(float value);
@@ -17,6 +24,9 @@ namespace cx
         vec3 operator+=(const vec3 &vec);
         vec3 operator-=(const vec3 &vec);
         bool operator==(const vec3 &vec) const;
+
+        vec3 dot(const vec3 &vec) const;
+        vec3 cross(const vec3 &vec) const;
     };
 
     vec3::vec3(float value)
@@ -24,11 +34,8 @@ namespace cx
         vec3(value, value, 0.0);
     }
 
-    vec3::vec3(float x, float y, float w)
+    vec3::vec3(float x, float y, float w) : x(x), y(y), w(w)
     {
-        x = x;
-        y = y;
-        w = w;
     }
 
     vec3::~vec3()
@@ -37,34 +44,22 @@ namespace cx
 
     vec3 vec3::operator+(const vec3 &vec) const
     {
-        float _x = x + vec.x;
-        float _y = y + vec.y;
-        float _w = w + vec.w;
-        return vec3(_x, _y, _w);
+        return vec3(x + vec.x, y + vec.y, w + vec.w);
     }
 
     vec3 vec3::operator*(const float factor) const
     {
-        float _x = x * factor;
-        float _y = y * factor;
-        float _w = w * factor;
-        return vec3(_x, _y, _w);
+        return vec3(x * factor, y * factor, w * factor);
     }
 
     vec3 vec3::operator/(const float factor) const
     {
-        float _x = x / factor;
-        float _y = y / factor;
-        float _w = w / factor;
-        return vec3(_x, _y, _w);
+        return vec3(x / factor, y / factor, w / factor);
     }
 
     vec3 vec3::operator-(const vec3 &vec) const
     {
-        float _x = x - vec.x;
-        float _y = y - vec.y;
-        float _w = w - vec.w;
-        return vec3(_x, _y, _w);
+        return vec3(x - vec.x, y - vec.y, w - vec.w);
     }
 
     vec3 vec3::operator+=(const vec3 &vec)
@@ -83,10 +78,11 @@ namespace cx
 
     bool vec3::operator==(const vec3 &vec) const
     {
-        if (vec.x == x && vec.y == y && vec.w == w)
-            return true;
-        else
-            return false;
+        return (vec.x == x && vec.y == y && vec.w == w);
     }
 
+    vec3 vec3::dot(const vec3 &vec) const
+    {
+        return vec3(x * vec.x, y * vec.y, w * vec.w);
+    }
 }
