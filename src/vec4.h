@@ -1,3 +1,5 @@
+#ifndef VEC4_H
+#define VEC4_H
 namespace cx
 {
     class vec4
@@ -84,3 +86,5 @@ namespace cx
         return vec4(x * vec.x, y * vec.y, z * vec.z, w * vec.w);
     }
 }
+
+#endif // VEC4_H

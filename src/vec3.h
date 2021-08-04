@@ -1,11 +1,5 @@
-/*
- * @Description: 
- * @Version: 2.0
- * @Autor: cc
- * @Date: 2021-03-31 18:55:43
- * @LastEditors: cc
- * @LastEditTime: 2021-04-05 03:00:11
- */
+#ifndef VEC3_H
+#define VEC3_H
 namespace cx
 {
     class vec3
@@ -86,3 +80,4 @@ namespace cx
         return vec3(x * vec.x, y * vec.y, w * vec.w);
     }
 }
+#endif

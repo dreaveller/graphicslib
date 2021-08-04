@@ -1,5 +1,7 @@
-#include <vec4.h>
+#ifndef MAT4_H
+#define MAT4_H
 
+#include <vec4.h>
 namespace cx
 {
     class mat4
@@ -24,7 +26,7 @@ namespace cx
         float *operator[](int row);
 
         mat4 product(const mat4 &mat) const; // 目前打算规定向量全为列向量,product 右乘 mat4 或者 vec4
-        vec4 product(const vec4& vec) const;
+        vec4 product(const vec4 &vec) const;
         mat4 dot(const mat4 &mat) const;
         void transpose();
 
@@ -106,7 +108,7 @@ namespace cx
         return tmp;
     }
 
-    vec4 mat4::product(const vec4& vec) const
+    vec4 mat4::product(const vec4 &vec) const
     {
         float _x = vec.x * elems[0] + vec.y * elems[1] + vec.z * elems[2] + vec.w * elems[3];
         float _y = vec.x * elems[4] + vec.y * elems[5] + vec.z * elems[6] + vec.w * elems[7];
@@ -143,3 +145,5 @@ namespace cx
         b = tmp;
     }
 } // namespace cx
+
+#endif
